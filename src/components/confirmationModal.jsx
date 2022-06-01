@@ -1,32 +1,15 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import CancelButton from "../components/cancelButton";
 import OkButton from "./okButton";
 
-function ConfirmationModal() {
-  let [isOpen, setIsOpen] = useState(true);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
+function ConfirmationModal(props) {
+  const { open, closeModal } = props;
 
   return (
     <div>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -66,7 +49,9 @@ function ConfirmationModal() {
 
                   <div className="flex justify-end gap-3 mt-4">
                     <OkButton />
-                    <CancelButton onClick={() => setIsOpen(false)} />
+                    <div onClick={closeModal}>
+                      <CancelButton />
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

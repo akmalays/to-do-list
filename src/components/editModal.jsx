@@ -1,7 +1,6 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
 
 function EditModal(props) {
@@ -46,7 +45,7 @@ function EditModal(props) {
                       title
                     </label>
                     <input
-                      className="text-xs py-2 px-1 w-[400px] border-2 rounded-lg focus:outline-none"
+                      className="text-xs py-2 px-1 w-[400px] border-none  focus:outline-none"
                       type="text"
                       id="title"
                     />
@@ -58,14 +57,34 @@ function EditModal(props) {
                       desc
                     </label>
                     <input
-                      className="text-xs py-2 px-1 w-[400px] h-10 border-2 focus:outline-none rounded-lg"
+                      className="text-xs py-2 px-1 w-[400px] focus:outline-none "
                       type="desc"
                       id="title"
                     />
+                    <label
+                      className="py-2 focus:outline-none text-xs font-bold"
+                      htmlFor="title"
+                    >
+                      {" "}
+                      status
+                    </label>
+                    <select
+                      className="text-xs py-2 px-1 w-[400px] focus:outline-none "
+                      id="status"
+                    >
+                      <option label="finish">Finished Task</option>
+                      <option label="on progress">on Progress</option>
+                    </select>
                   </div>
 
                   <div className="flex justify-end gap-3 mt-4">
-                    <TaskButton />
+                    <button
+                      className="bg-orange-500 rounded-lg text-white font-bold text-[12px] py-2 px-2 cursor-pointer"
+                      onClick={() => props.actionButton()}
+                    >
+                      {" "}
+                      edit task{" "}
+                    </button>
                     <div onClick={closeModal}>
                       <CancelButton />
                     </div>

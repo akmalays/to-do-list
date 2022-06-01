@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaRegCheckCircle } from "react-icons/fa";
 import { AiTwotoneDelete } from "react-icons/ai";
-import DeleteButton from "../components/deleteButton";
 import EditModal from "./editModal";
 import { useDispatch, useSelector } from "react-redux";
 import allStore from "../store/actions/index";
+import ConfirmationModal from "./confirmationModal";
 
 function AppContent(props) {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ function AppContent(props) {
   }
 
   const [isOpen, setIsOpen] = useState(false);
+  const [openModalConfirm, setOpenModalConfirm] = useState(false);
 
   useEffect(() => {
     dispatch(allStore.getDefaultListToDo());
@@ -54,7 +55,9 @@ function AppContent(props) {
                           </p>
                           <div className="text-orange-600 flex gap-2 cursor-pointer">
                             <FaEdit size={18} onClick={() => setIsOpen(true)} />
-                            <AiTwotoneDelete />
+                            <AiTwotoneDelete
+                              onClick={() => setOpenModalConfirm(true)}
+                            />
                           </div>
                         </div>
                         <p className="font-bold text-green-800 pt-2 pb-4 ">
@@ -95,14 +98,15 @@ function AppContent(props) {
                     className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg"
                     key={i}
                   >
-                    <div className="px-4 py-4">
+                    <div className="px-4 py-3">
                       <div className="flex justify-between">
                         <p className="font-light text-xs text-orange-600">
                           {" "}
                           {e.description}{" "}
                         </p>
-                        <div className="text-orange-600 cursor-pointer">
-                          <FaRegCheckCircle size={20} />
+                        <div className="text-orange-600 flex gap-2 cursor-pointer">
+                          <FaEdit size={18} onClick={() => setIsOpen(true)} />
+                          <FaRegCheckCircle size={18} />
                         </div>
                       </div>
                       <p className="font-bold text-green-800 pt-2 pb-4 ">
@@ -110,10 +114,14 @@ function AppContent(props) {
                         {e.title}
                       </p>{" "}
                     </div>
-                    <div className=" flex justify-between  px-4">
-                      <div className="">
-                        <DeleteButton className="mb-2" />
-                      </div>
+                    <div className=" flex justify-between px-4">
+                      <button
+                        className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg"
+                        onClick={() => setOpenModalConfirm(true)}
+                      >
+                        {" "}
+                        Delete
+                      </button>
                       <p className="font-base text-[10px] text-orange-600">
                         {" "}
                         {e.createdAt}
@@ -124,6 +132,10 @@ function AppContent(props) {
               : null}
           </div>
         </div>
+        <ConfirmationModal
+          open={openModalConfirm}
+          closeModal={() => setOpenModalConfirm(false)}
+        />
       </div>
     </div>
   );
