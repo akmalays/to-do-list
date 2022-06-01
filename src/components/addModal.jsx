@@ -1,16 +1,11 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
 
-function AddModal() {
-  const [isOpen, setIsOpen] = useState(true);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
+function AddModal(props) {
+  const { isOpen, closeModal } = props;
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -71,11 +66,7 @@ function AddModal() {
 
                   <div className="flex justify-end gap-3 mt-4">
                     <TaskButton />
-                    <div
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                    >
+                    <div onClick={closeModal}>
                       <CancelButton />
                     </div>
                   </div>

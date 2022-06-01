@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import TaskButton from "./taskButton";
+import AddModal from "./addModal";
 
 function AppHeader() {
+  const [statusAddModal, setStatusAddModal] = useState(false);
   return (
     <div>
       <div className="container mx-auto">
@@ -26,11 +28,15 @@ function AppHeader() {
               today!{" "}
             </p>
             <div className="flex justify-center">
-              <TaskButton />
+              <TaskButton actionButton={(e) => setStatusAddModal(e)} />
             </div>
           </div>
         </div>
       </div>
+      <AddModal
+        isOpen={statusAddModal}
+        closeModal={() => setStatusAddModal(false)}
+      />
     </div>
   );
 }

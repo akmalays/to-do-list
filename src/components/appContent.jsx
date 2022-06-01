@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AddModal from "./addModal";
 import { FaEdit, FaRegCheckCircle } from "react-icons/fa";
 import { AiTwotoneDelete } from "react-icons/ai";
 import DeleteButton from "../components/deleteButton";
@@ -57,7 +56,6 @@ function AppContent() {
                             />
                           </div>
                         </div>
-                        <AddModal />
                         <p className="font-bold text-green-800 pt-2 pb-4 ">
                           {" "}
                           {e.title}
