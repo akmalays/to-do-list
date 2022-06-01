@@ -1,32 +1,14 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
 
-function EditModal() {
-  let [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
+function EditModal(props) {
+  const { open, closeModal } = props;
   return (
     <div>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -54,9 +36,9 @@ function EditModal() {
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-[#f3f3f3] p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-lg flex justify-center font-bold leading-6 text-gray-900"
                   >
-                    Edit a Task
+                    don't worry, edit your plan here!
                   </Dialog.Title>
                   <div className="mt-2 grid justify-start">
                     <label className="py-2 font-bold text-xs" htmlFor="title">
@@ -82,13 +64,9 @@ function EditModal() {
                     />
                   </div>
 
-                  <div className="flex justify-start gap-3 mt-4">
+                  <div className="flex justify-end gap-3 mt-4">
                     <TaskButton />
-                    <div
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                    >
+                    <div onClick={closeModal}>
                       <CancelButton />
                     </div>
                   </div>

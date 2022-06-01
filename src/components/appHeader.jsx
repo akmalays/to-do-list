@@ -28,7 +28,7 @@ function AppHeader() {
               today!{" "}
             </p>
             <div className="flex justify-center">
-              <TaskButton actionButton={(e) => setStatusAddModal(e)} />
+              <TaskButton actionButton={() => setStatusAddModal(true)} />
             </div>
           </div>
         </div>

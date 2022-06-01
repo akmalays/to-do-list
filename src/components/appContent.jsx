@@ -2,25 +2,29 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaRegCheckCircle } from "react-icons/fa";
 import { AiTwotoneDelete } from "react-icons/ai";
 import DeleteButton from "../components/deleteButton";
-import axios from "axios";
+import EditModal from "./editModal";
+import { useDispatch, useSelector } from "react-redux";
+import allStore from "../store/actions/index";
 
-function AppContent() {
-  const dummyData =
-    "https://virtserver.swaggerhub.com/hanabyan/todo/1.0.0/to-do-list";
+function AppContent(props) {
+  const dispatch = useDispatch();
+  const dataFetch = useSelector((data) => data.todoReducer.listTodo);
 
-  const [isOpen, setIsOpen] = useState(true);
-  const [dataFetch, setDataFetch] = useState();
+  const dataUndone = dataFetch.filter((data) => data.status === 0);
+  const dataDone = dataFetch.filter((data) => data.status === 1);
+
+  if (dataUndone.length > 1) {
+    dataUndone.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  }
+  if (dataDone.length > 1) {
+    dataDone.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(dummyData)
-      .then((response) => {
-        setDataFetch(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    dispatch(allStore.getDefaultListToDo());
+  }, [dispatch]);
 
   return (
     <div>
@@ -32,15 +36,15 @@ function AppContent() {
               On Progress{" "}
               <span className="bg-orange-600 rounded-lg px-2 py-2 text-white font-bold text-sm">
                 {" "}
-                7{" "}
+                {dataUndone.length}{" "}
               </span>{" "}
             </p>
             <div className="flex flex-wrap gap-5">
-              {dataFetch
-                ? dataFetch.map((e, i) => (
+              {dataUndone
+                ? dataUndone.map((e, i) => (
                     <div
                       className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg"
-                      key={e.id}
+                      key={i}
                     >
                       <div className="px-4 py-3">
                         <div className="flex justify-between">
@@ -50,10 +54,7 @@ function AppContent() {
                           </p>
                           <div className="text-orange-600 flex gap-2 cursor-pointer">
                             <FaEdit size={18} onClick={() => setIsOpen(true)} />
-                            <AiTwotoneDelete
-                              size={18}
-                              onClick={() => setIsOpen(true)}
-                            />
+                            <AiTwotoneDelete />
                           </div>
                         </div>
                         <p className="font-bold text-green-800 pt-2 pb-4 ">
@@ -75,6 +76,7 @@ function AppContent() {
                   ))
                 : null}
             </div>
+            <EditModal open={isOpen} closeModal={() => setIsOpen(false)} />
           </div>
           <div className="mb-5">
             <p className="text-green-800 font-bold font-lg">
@@ -82,37 +84,44 @@ function AppContent() {
               Finished Task{" "}
               <span className="bg-orange-600 rounded-lg px-2 py-2 text-white font-bold text-sm">
                 {" "}
-                5{" "}
+                {dataDone.length}{" "}
               </span>{" "}
             </p>
           </div>
           <div className="flex flex-wrap gap-5">
-            <div className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg">
-              <div className="px-4 py-4">
-                <div className="flex justify-between">
-                  <p className="font-light text-xs text-orange-600">
-                    {" "}
-                    making coffee{" "}
-                  </p>
-                  <div className="text-orange-600 cursor-pointer">
-                    <FaRegCheckCircle size={20} />
+            {dataDone
+              ? dataDone.map((e, i) => (
+                  <div
+                    className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg"
+                    key={i}
+                  >
+                    <div className="px-4 py-4">
+                      <div className="flex justify-between">
+                        <p className="font-light text-xs text-orange-600">
+                          {" "}
+                          {e.description}{" "}
+                        </p>
+                        <div className="text-orange-600 cursor-pointer">
+                          <FaRegCheckCircle size={20} />
+                        </div>
+                      </div>
+                      <p className="font-bold text-green-800 pt-2 pb-4 ">
+                        {" "}
+                        {e.title}
+                      </p>{" "}
+                    </div>
+                    <div className=" flex justify-between  px-4">
+                      <div className="">
+                        <DeleteButton className="mb-2" />
+                      </div>
+                      <p className="font-base text-[10px] text-orange-600">
+                        {" "}
+                        {e.createdAt}
+                      </p>{" "}
+                    </div>
                   </div>
-                </div>
-                <p className="font-bold text-green-800 pt-2 pb-4 ">
-                  {" "}
-                  get a coffee with full milk
-                </p>{" "}
-              </div>
-              <div className=" flex justify-between  px-4">
-                <div className="">
-                  <DeleteButton className="mb-2" />
-                </div>
-                <p className="font-base text-[10px] text-orange-600">
-                  {" "}
-                  date : 15 may 2022
-                </p>{" "}
-              </div>
-            </div>
+                ))
+              : null}
           </div>
         </div>
       </div>

@@ -1,11 +1,25 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import allStore from "../store/actions/index";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
 
 function AddModal(props) {
+  const dispatch = useDispatch();
   const { isOpen, closeModal } = props;
+  const actionAddTodo = () => {
+    const newData = {
+      id: 2,
+      title: "Dinner with family",
+      description: "lorem ipsum",
+      status: 0,
+      createdAt: "2019-11-16 18:00",
+    };
+    dispatch(allStore.addTodo(newData));
+    closeModal();
+  };
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -38,7 +52,7 @@ function AddModal(props) {
                     as="h3"
                     className="text-lg flex justify-center font-bold leading-6 text-gray-900"
                   >
-                    Add a Task
+                    what's the plan for today?
                   </Dialog.Title>
                   <div className="mt-2 grid justify-start">
                     <label className="py-2 font-bold text-xs" htmlFor="title">
@@ -65,7 +79,7 @@ function AddModal(props) {
                   </div>
 
                   <div className="flex justify-end gap-3 mt-4">
-                    <TaskButton />
+                    <TaskButton actionButton={() => actionAddTodo()} />
                     <div onClick={closeModal}>
                       <CancelButton />
                     </div>
