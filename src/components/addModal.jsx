@@ -5,6 +5,7 @@ import allStore from "../store/actions/index";
 import { Dialog, Transition } from "@headlessui/react";
 import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
+import { Toaster, toast } from "react-hot-toast";
 
 function AddModal(props) {
   const dispatch = useDispatch();
@@ -15,9 +16,9 @@ function AddModal(props) {
 
   const actionAddTodo = () => {
     if (title === "") {
-      alert("isi judul dahulu !");
+      toast.error("please fill the title !");
     } else if (desc === "") {
-      alert("isi descripsi juga ya !");
+      toast.error("please fill the description !");
     } else {
       const newData = {
         id: uuid(),
@@ -28,6 +29,7 @@ function AddModal(props) {
       };
       dispatch(allStore.addTodo(newData));
       closeModal();
+      toast.success("success add new plan!");
     }
   };
 
@@ -42,6 +44,9 @@ function AddModal(props) {
 
   return (
     <div>
+      <div>
+        <Toaster position="top-center" reverseOrder={false} />
+      </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child

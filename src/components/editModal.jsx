@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Dialog, Transition } from "@headlessui/react";
 import CancelButton from "./cancelButton";
 import allStore from "../store/actions/index";
+import { Toaster, toast } from "react-hot-toast";
 
 function EditModal(props) {
   const dispatch = useDispatch();
@@ -25,9 +26,9 @@ function EditModal(props) {
 
   const actionEditTodo = () => {
     if (title === "") {
-      alert("isi judul dahulu !");
+      toast.error("please fill the title !");
     } else if (desc === "") {
-      alert("isi descripsi juga ya !");
+      toast.error("please fill the description !");
     } else {
       const newData = {
         id: id,
@@ -38,6 +39,7 @@ function EditModal(props) {
       };
       dispatch(allStore.updateTodo(id, newData));
       closeModal();
+      toast.success("success edit your plan!");
     }
   };
 
@@ -52,6 +54,7 @@ function EditModal(props) {
 
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={false} />
       <Transition appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child

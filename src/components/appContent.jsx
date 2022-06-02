@@ -8,6 +8,7 @@ import DeleteModal from "./confirmationModal";
 import DoneUndoneModal from "./confirmationModal";
 import TaskButton from "./taskButton";
 import AddModal from "./addModal";
+import { Toaster, toast } from "react-hot-toast";
 
 function AppContent(props) {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ function AppContent(props) {
   const deleteTodo = () => {
     dispatch(allStore.deleteTodo(idTodoSelected));
     setOpenModalDelete(false);
+    toast.success("success delete your plan!");
   };
 
   // function to change status done todo
@@ -57,6 +59,7 @@ function AppContent(props) {
   const updateStatusTodo = (status) => {
     dispatch(allStore.changeStatusTodo(idTodoSelected, status));
     setOpenModalDoneUndone(false);
+    toast.success("success done your plan!");
   };
 
   // function to update todo
@@ -67,6 +70,9 @@ function AppContent(props) {
 
   return (
     <div>
+      <div>
+        <Toaster position="top-center" reverseOrder={false} />
+      </div>
       <div className="flex justify-center gap-20 py-5">
         <div className="">
           <p className="text-xl text-green-900 capitalize font-bold tracking-wide">
@@ -204,15 +210,15 @@ function AppContent(props) {
           open={openModalDelete}
           closeModal={() => setOpenModalDelete(false)}
           actionButton={() => deleteTodo()}
-          title="Konfirmasi Hapus List"
-          description="Kamu yakin mau menghapus list ini ?"
+          title="Delete List Confirmation"
+          description="Are You Sure to Delete This List ?"
         />
         <DoneUndoneModal
           open={openModalDoneUndone}
           closeModal={() => setOpenModalDoneUndone(false)}
           actionButton={() => updateStatusTodo(1)}
-          title="Konfirmasi Ubah Status"
-          description="Kamu yakin sudah menyelesaikan tugas ini ?"
+          title="Change Status Confirmation"
+          description="Are You Sure Finisihed The Task ?"
         />
       </div>
     </div>
