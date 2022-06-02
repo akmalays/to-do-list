@@ -18,18 +18,48 @@ export const getDefaultListToDo = () => {
 
 export const addTodo = (objectData) => {
   return (dispatch, getState) => {
-    const listTodo = getState().todoReducer.listTodo;
-    console.warn("cek existing list", listTodo);
+    let listTodo = getState().todoReducer.listTodo;
     listTodo.push(objectData);
-    dispatch(addListTodo(listTodo));
-    // setListTodo(newList);
+    dispatch(setListTodo(listTodo));
   };
 };
 
-export const addListTodo = (payload) => {
-  return {
-    type: "ADD_LIST_TODO",
-    payload,
+export const deleteTodo = (id) => {
+  return (dispatch, getState) => {
+    let listTodo = getState().todoReducer.listTodo;
+    listTodo.forEach((todo, index) => {
+      if (todo.id === id) {
+        listTodo.splice(index, 1);
+      }
+    });
+    dispatch(setListTodo(listTodo));
+  };
+};
+
+export const changeStatusTodo = (id, status) => {
+  return (dispatch, getState) => {
+    let listTodo = getState().todoReducer.listTodo;
+    listTodo.forEach((listItem) => {
+      if (listItem.id === id) {
+        listItem.status = status;
+      }
+    });
+    dispatch(setListTodo(listTodo));
+  };
+};
+
+export const updateTodo = (id, dataUpdate) => {
+  return (dispatch, getState) => {
+    let listTodo = getState().todoReducer.listTodo;
+    listTodo.forEach((listItem) => {
+      if (listItem.id === id) {
+        listItem.status = parseInt(dataUpdate.status);
+        listItem.title = dataUpdate.title;
+        listItem.description = dataUpdate.description;
+        listItem.createdAt = dataUpdate.createdAt;
+      }
+    });
+    dispatch(setListTodo(listTodo));
   };
 };
 

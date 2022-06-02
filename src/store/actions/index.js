@@ -1,8 +1,16 @@
-import { getDefaultListToDo, addTodo, addListTodo } from "./toDoAction";
+import {
+  getDefaultListToDo,
+  addTodo,
+  deleteTodo,
+  changeStatusTodo,
+  updateTodo,
+} from "./toDoAction";
 
 const allStore = {
   getDefaultListToDo,
   addTodo,
-  addListTodo,
+  deleteTodo,
+  changeStatusTodo,
+  updateTodo,
 };
 export default allStore;

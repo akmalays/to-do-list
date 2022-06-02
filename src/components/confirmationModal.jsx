@@ -5,7 +5,7 @@ import CancelButton from "../components/cancelButton";
 import OkButton from "./okButton";
 
 function ConfirmationModal(props) {
-  const { open, closeModal } = props;
+  const { open, closeModal, actionButton, title, description } = props;
 
   return (
     <div>
@@ -39,16 +39,14 @@ function ConfirmationModal(props) {
                     as="h3"
                     className="text-sm font-bold flex justify-center capitalize leading-6 text-gray-900"
                   >
-                    confirm your changes
+                    {title}
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-xs text-gray-500">
-                      are you sure with this changes?
-                    </p>
+                    <p className="text-xs text-gray-500">{description}</p>
                   </div>
 
                   <div className="flex justify-end gap-3 mt-4">
-                    <OkButton />
+                    <OkButton actionButton={() => actionButton()} />
                     <div onClick={closeModal}>
                       <CancelButton />
                     </div>

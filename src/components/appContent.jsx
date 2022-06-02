@@ -4,12 +4,16 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import EditModal from "./editModal";
 import { useDispatch, useSelector } from "react-redux";
 import allStore from "../store/actions/index";
-import ConfirmationModal from "./confirmationModal";
+import DeleteModal from "./confirmationModal";
+import DoneUndoneModal from "./confirmationModal";
+import TaskButton from "./taskButton";
+import AddModal from "./addModal";
 
 function AppContent(props) {
   const dispatch = useDispatch();
-  const dataFetch = useSelector((data) => data.todoReducer.listTodo);
 
+  // set up data for list todo
+  const dataFetch = useSelector((data) => data.todoReducer.listTodo);
   const dataUndone = dataFetch.filter((data) => data.status === 0);
   const dataDone = dataFetch.filter((data) => data.status === 1);
 
@@ -20,15 +24,62 @@ function AppContent(props) {
     dataDone.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [openModalConfirm, setOpenModalConfirm] = useState(false);
+  // state
+  const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [statusAddModal, setStatusAddModal] = useState(false);
+  const [idTodoSelected, setIdTodoSelected] = useState("");
+  const [openModalDoneUndone, setOpenModalDoneUndone] = useState(false);
+  const [todoSelected, setTodoSelected] = useState({});
 
+  // get initial list todo
   useEffect(() => {
     dispatch(allStore.getDefaultListToDo());
   }, [dispatch]);
 
+  // function to delete todo
+  const openDeleteConfirmation = (id) => {
+    setIdTodoSelected(id);
+    setOpenModalDelete(true);
+  };
+
+  const deleteTodo = () => {
+    dispatch(allStore.deleteTodo(idTodoSelected));
+    setOpenModalDelete(false);
+  };
+
+  // function to change status done todo
+  const openModalChangeStatus = (id) => {
+    setIdTodoSelected(id);
+    setOpenModalDoneUndone(true);
+  };
+
+  const updateStatusTodo = (status) => {
+    dispatch(allStore.changeStatusTodo(idTodoSelected, status));
+    setOpenModalDoneUndone(false);
+  };
+
+  // function to update todo
+  const openEditConfirmation = (item) => {
+    setTodoSelected(item);
+    setOpenModalEdit(true);
+  };
+
   return (
     <div>
+      <div className="flex justify-center gap-20 py-5">
+        <div className="">
+          <p className="text-xl text-green-900 capitalize font-bold tracking-wide">
+            {" "}
+            you've got{" "}
+            <span className="text-orange-600"> {dataFetch.length} </span> task
+            today!{" "}
+          </p>
+          <div className="flex justify-center">
+            <TaskButton actionButton={() => setStatusAddModal(true)} />
+          </div>
+        </div>
+      </div>
       <div className="flex justify-start">
         <div className="grid">
           <div className="mb-10">
@@ -54,9 +105,12 @@ function AppContent(props) {
                             {e.description}{" "}
                           </p>
                           <div className="text-orange-600 flex gap-2 cursor-pointer">
-                            <FaEdit size={18} onClick={() => setIsOpen(true)} />
+                            <FaEdit
+                              size={18}
+                              onClick={() => openEditConfirmation(e)}
+                            />
                             <AiTwotoneDelete
-                              onClick={() => setOpenModalConfirm(true)}
+                              onClick={() => openDeleteConfirmation(e.id)}
                             />
                           </div>
                         </div>
@@ -66,7 +120,10 @@ function AppContent(props) {
                         </p>{" "}
                       </div>
                       <div className=" flex justify-between px-4">
-                        <button className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg">
+                        <button
+                          className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg"
+                          onClick={() => openModalChangeStatus(e.id)}
+                        >
                           {" "}
                           Done !
                         </button>
@@ -79,7 +136,6 @@ function AppContent(props) {
                   ))
                 : null}
             </div>
-            <EditModal open={isOpen} closeModal={() => setIsOpen(false)} />
           </div>
           <div className="mb-5">
             <p className="text-green-800 font-bold font-lg">
@@ -105,7 +161,10 @@ function AppContent(props) {
                           {e.description}{" "}
                         </p>
                         <div className="text-orange-600 flex gap-2 cursor-pointer">
-                          <FaEdit size={18} onClick={() => setIsOpen(true)} />
+                          <FaEdit
+                            size={18}
+                            onClick={() => openEditConfirmation(e)}
+                          />
                           <FaRegCheckCircle size={18} />
                         </div>
                       </div>
@@ -117,7 +176,7 @@ function AppContent(props) {
                     <div className=" flex justify-between px-4">
                       <button
                         className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg"
-                        onClick={() => setOpenModalConfirm(true)}
+                        onClick={() => openDeleteConfirmation(e.id)}
                       >
                         {" "}
                         Delete
@@ -132,9 +191,28 @@ function AppContent(props) {
               : null}
           </div>
         </div>
-        <ConfirmationModal
-          open={openModalConfirm}
-          closeModal={() => setOpenModalConfirm(false)}
+        <AddModal
+          isOpen={statusAddModal}
+          closeModal={() => setStatusAddModal(false)}
+        />
+        <EditModal
+          open={openModalEdit}
+          closeModal={() => setOpenModalEdit(false)}
+          todoSelected={todoSelected}
+        />
+        <DeleteModal
+          open={openModalDelete}
+          closeModal={() => setOpenModalDelete(false)}
+          actionButton={() => deleteTodo()}
+          title="Konfirmasi Hapus List"
+          description="Kamu yakin mau menghapus list ini ?"
+        />
+        <DoneUndoneModal
+          open={openModalDoneUndone}
+          closeModal={() => setOpenModalDoneUndone(false)}
+          actionButton={() => updateStatusTodo(1)}
+          title="Konfirmasi Ubah Status"
+          description="Kamu yakin sudah menyelesaikan tugas ini ?"
         />
       </div>
     </div>

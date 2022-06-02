@@ -1,10 +1,55 @@
-import React from "react";
+import React, { Fragment, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import CancelButton from "./cancelButton";
+import allStore from "../store/actions/index";
 
 function EditModal(props) {
-  const { open, closeModal } = props;
+  const dispatch = useDispatch();
+  const { open, closeModal, todoSelected } = props;
+  const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [status, setStatus] = useState(0);
+
+  // set initial selected todo
+  useEffect(() => {
+    const todoObj = todoSelected;
+    if (todoObj) {
+      setId(todoObj.id);
+      setTitle(todoObj.title);
+      setDesc(todoObj.description);
+      setStatus(todoObj.status);
+    }
+  }, [todoSelected]);
+
+  const actionEditTodo = () => {
+    if (title === "") {
+      alert("isi judul dahulu !");
+    } else if (desc === "") {
+      alert("isi descripsi juga ya !");
+    } else {
+      const newData = {
+        id: id,
+        title: title,
+        description: desc,
+        status: status,
+        createdAt: getCurrentDate(),
+      };
+      dispatch(allStore.updateTodo(id, newData));
+      closeModal();
+    }
+  };
+
+  const getCurrentDate = () => {
+    const nowDate = new Date();
+    const convertDate = nowDate.toISOString();
+    const dateNow = convertDate.split("T")[0];
+    const timeNow = convertDate.split("T")[1].split(".")[0];
+    const joinDate = dateNow + " " + timeNow;
+    return joinDate;
+  };
+
   return (
     <div>
       <Transition appear show={open} as={Fragment}>
@@ -48,6 +93,8 @@ function EditModal(props) {
                       className="text-xs py-2 px-1 w-[400px] border-none  focus:outline-none"
                       type="text"
                       id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                     <label
                       className="py-2 focus:outline-none text-xs font-bold"
@@ -60,6 +107,8 @@ function EditModal(props) {
                       className="text-xs py-2 px-1 w-[400px] focus:outline-none "
                       type="desc"
                       id="title"
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
                     />
                     <label
                       className="py-2 focus:outline-none text-xs font-bold"
@@ -71,16 +120,21 @@ function EditModal(props) {
                     <select
                       className="text-xs py-2 px-1 w-[400px] focus:outline-none "
                       id="status"
+                      onChange={(e) => setStatus(e.target.value)}
+                      value={status}
                     >
-                      <option label="finish">Finished Task</option>
-                      <option label="on progress">on Progress</option>
+                      <option label="on progress" value={0}>
+                        on Progress
+                      </option>
+                      <option label="finish" value={1}>
+                        Finished Task
+                      </option>
                     </select>
                   </div>
-
                   <div className="flex justify-end gap-3 mt-4">
                     <button
                       className="bg-orange-500 rounded-lg text-white font-bold text-[12px] py-2 px-2 cursor-pointer"
-                      onClick={() => props.actionButton()}
+                      onClick={() => actionEditTodo()}
                     >
                       {" "}
                       edit task{" "}

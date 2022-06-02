@@ -1,25 +1,45 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { Fragment, useState } from "react";
+import uuid from "react-uuid";
+import { useDispatch } from "react-redux";
 import allStore from "../store/actions/index";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import TaskButton from "./taskButton";
 import CancelButton from "./cancelButton";
 
 function AddModal(props) {
   const dispatch = useDispatch();
   const { isOpen, closeModal } = props;
+
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+
   const actionAddTodo = () => {
-    const newData = {
-      id: 2,
-      title: "Dinner with family",
-      description: "lorem ipsum",
-      status: 0,
-      createdAt: "2019-11-16 18:00",
-    };
-    dispatch(allStore.addTodo(newData));
-    closeModal();
+    if (title === "") {
+      alert("isi judul dahulu !");
+    } else if (desc === "") {
+      alert("isi descripsi juga ya !");
+    } else {
+      const newData = {
+        id: uuid(),
+        title: title,
+        description: desc,
+        status: 0,
+        createdAt: getCurrentDate(),
+      };
+      dispatch(allStore.addTodo(newData));
+      closeModal();
+    }
   };
+
+  const getCurrentDate = () => {
+    const nowDate = new Date();
+    const convertDate = nowDate.toISOString();
+    const dateNow = convertDate.split("T")[0];
+    const timeNow = convertDate.split("T")[1].split(".")[0];
+    const joinDate = dateNow + " " + timeNow;
+    return joinDate;
+  };
+
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -63,6 +83,8 @@ function AddModal(props) {
                       className="text-xs py-2 px-1 w-[400px] border-none focus:outline-none"
                       type="text"
                       id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                     <label
                       className="py-2 focus:outline-none text-xs font-bold"
@@ -75,6 +97,8 @@ function AddModal(props) {
                       className="text-xs py-2 px-1 w-[400px]  border-none focus:outline-none "
                       type="textarea"
                       id="desc"
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
                     />
                   </div>
 
