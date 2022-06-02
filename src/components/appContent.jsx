@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaRegCheckCircle } from "react-icons/fa";
-import { AiTwotoneDelete } from "react-icons/ai";
+import { Toaster, toast } from "react-hot-toast";
 import EditModal from "./editModal";
 import { useDispatch, useSelector } from "react-redux";
 import allStore from "../store/actions/index";
@@ -8,7 +7,7 @@ import DeleteModal from "./confirmationModal";
 import DoneUndoneModal from "./confirmationModal";
 import TaskButton from "./taskButton";
 import AddModal from "./addModal";
-import { Toaster, toast } from "react-hot-toast";
+import TodoItem from "./todoItem";
 
 function AppContent(props) {
   const dispatch = useDispatch();
@@ -100,44 +99,19 @@ function AppContent(props) {
             <div className="flex flex-wrap gap-5">
               {dataUndone
                 ? dataUndone.map((e, i) => (
-                    <div
-                      className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg"
-                      key={i}
-                    >
-                      <div className="px-4 py-3">
-                        <div className="flex justify-between">
-                          <p className="font-light text-xs text-orange-600">
-                            {" "}
-                            {e.description}{" "}
-                          </p>
-                          <div className="text-orange-600 flex gap-2 cursor-pointer">
-                            <FaEdit
-                              size={18}
-                              onClick={() => openEditConfirmation(e)}
-                            />
-                            <AiTwotoneDelete
-                              onClick={() => openDeleteConfirmation(e.id)}
-                            />
-                          </div>
-                        </div>
-                        <p className="font-bold text-green-800 pt-2 pb-4 ">
-                          {" "}
-                          {e.title}
-                        </p>{" "}
-                      </div>
-                      <div className=" flex justify-between px-4">
-                        <button
-                          className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg"
-                          onClick={() => openModalChangeStatus(e.id)}
-                        >
-                          {" "}
-                          Done !
-                        </button>
-                        <p className="font-base text-[10px] text-orange-600">
-                          {" "}
-                          {e.createdAt}
-                        </p>{" "}
-                      </div>
+                    <div key={i}>
+                      <TodoItem
+                        listItem={e}
+                        openEditConfirmation={(item) =>
+                          openEditConfirmation(item)
+                        }
+                        openDeleteConfirmation={(id) =>
+                          openDeleteConfirmation(id)
+                        }
+                        openModalChangeStatus={(id) =>
+                          openModalChangeStatus(id)
+                        }
+                      />
                     </div>
                   ))
                 : null}
@@ -145,10 +119,8 @@ function AppContent(props) {
           </div>
           <div className="mb-5">
             <p className="text-green-800 font-bold font-lg">
-              {" "}
               Finished Task{" "}
               <span className="bg-orange-600 rounded-lg px-2 py-2 text-white font-bold text-sm">
-                {" "}
                 {dataDone.length}{" "}
               </span>{" "}
             </p>
@@ -156,42 +128,18 @@ function AppContent(props) {
           <div className="flex flex-wrap gap-5">
             {dataDone
               ? dataDone.map((e, i) => (
-                  <div
-                    className="container bg-white w-[200px] h-[150px] rounded-lg drop-shadow-lg"
-                    key={i}
-                  >
-                    <div className="px-4 py-3">
-                      <div className="flex justify-between">
-                        <p className="font-light text-xs text-orange-600">
-                          {" "}
-                          {e.description}{" "}
-                        </p>
-                        <div className="text-orange-600 flex gap-2 cursor-pointer">
-                          <FaEdit
-                            size={18}
-                            onClick={() => openEditConfirmation(e)}
-                          />
-                          <FaRegCheckCircle size={18} />
-                        </div>
-                      </div>
-                      <p className="font-bold text-green-800 pt-2 pb-4 ">
-                        {" "}
-                        {e.title}
-                      </p>{" "}
-                    </div>
-                    <div className=" flex justify-between px-4">
-                      <button
-                        className="bg-green-800 py-1 px-1.5 text-white font-semibold text-[10px] rounded-lg"
-                        onClick={() => openDeleteConfirmation(e.id)}
-                      >
-                        {" "}
-                        Delete
-                      </button>
-                      <p className="font-base text-[10px] text-orange-600">
-                        {" "}
-                        {e.createdAt}
-                      </p>{" "}
-                    </div>
+                  <div key={i}>
+                    <TodoItem
+                      listItem={e}
+                      openEditConfirmation={(item) =>
+                        openEditConfirmation(item)
+                      }
+                      openDeleteConfirmation={(id) =>
+                        openDeleteConfirmation(id)
+                      }
+                      openModalChangeStatus={(id) => openModalChangeStatus(id)}
+                      isDoneItem={true}
+                    />
                   </div>
                 ))
               : null}
