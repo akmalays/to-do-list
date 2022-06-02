@@ -4,6 +4,8 @@
 
 > a complete todo application with CRUD features
 
+- Live site [_https://todolistreact-2.netlify.app/_]
+
 ## General Information
 
 - in this project, we create a complete Todo Application with all features. we did all the CRUD operations, we use React.js, tailwind css, and to manage the states we use Redux. hope you enjoy it!
